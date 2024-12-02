@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            overflow: hidden;
+        }
+        #canvas1{
+            position: absolute;
+            border: 1px solid black;
+            background-color: skyblue;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas1"></canvas>
+    <script>
+        const canvas = document.querySelector('#canvas1')
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let numbers = [0, 0, 0];
+        let scale = 25;
+        let size = 12;
+        let rotation = 0;
+        let hue = 0;
+
+        function drawFlower() {
+            for (let i = 0; i < 3; i++) {
+                let angle = numbers[i] * 1 + (i * (Math.PI * 2 / 3));
+                let radius = scale * Math.sqrt(numbers[i]);
+                let positionX = radius * Math.cos(angle) + canvas.width / 2;
+                let positionY = radius * Math.sin(angle) + canvas.height / 2;
+
+                ctx.lineWidth = 1;
+                ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+                ctx.save();
+                ctx.translate(positionX, positionY);
+                ctx.rotate(rotation);
+                
+                ctx.beginPath();
+                ctx.moveTo(0, -size);
+                ctx.lineTo(-size, size);
+                ctx.lineTo(size, size);
+                ctx.closePath();
+                ctx.stroke();
+                
+                ctx.restore();
+                
+                numbers[i] += 1;
+            }
+            size += 0.3;
+            rotation += 0.02;
+            hue += 0.5;
+            if (hue >= 180) hue = 0;
+        }
+
+        function animate() {
+            // ctx.clearRect(0, 0, canvas.width, canvas.height); 
+            drawFlower();
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
+</body>
+</html>
